@@ -7,8 +7,11 @@ defmodule BankingApi.Application do
 
   def start(_type, _args) do
     children = [
+      {BankingApi.Repo, []},
+
       # Start the Ecto repository
       BankingApi.Repo,
+
       # Start the PubSub system
       {Phoenix.PubSub, name: BankingApi.PubSub}
       # Start a worker by calling: BankingApi.Worker.start_link(arg)

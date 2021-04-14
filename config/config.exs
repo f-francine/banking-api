@@ -9,6 +9,12 @@
 # move said applications out of the umbrella.
 use Mix.Config
 
+config :banking_api, BankingApi.Repo,
+  database: "banking_api_repo",
+  username: "user",
+  password: "pass",
+  hostname: "localhost"
+
 # Configure Mix tasks and generators
 config :banking_api,
   ecto_repos: [BankingApi.Repo]
