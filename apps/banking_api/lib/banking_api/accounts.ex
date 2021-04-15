@@ -2,14 +2,14 @@ defmodule BankingApi.Accounts do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @primary_key {:id, :binary_id, autogenerate: true}
 
-  @required_params [:user, :balance]
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @required_params [:user]
 
   schema "accounts" do
 
     field :user, :string
-    field :balance, :integer
+    field :balance, :integer, default: 1000
 
     timestamps()
   end
