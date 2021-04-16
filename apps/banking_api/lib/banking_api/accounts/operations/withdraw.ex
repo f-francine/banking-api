@@ -3,11 +3,10 @@ defmodule BankingApi.Accounts.Operations.Withdraw do
   alias BankingApi.Accounts
 
   import Ecto.Query
-  def call(%{id: id, value: value}) do
+  def call(%{user: user, value: value}) do
     Multi.new()
-
     |> Multi.run(:account, fn repo, _changes ->
-      get_account(repo, id)
+      get_account(repo, user)
     end)
     |> Multi.run(:update_balance, fn repo, %{account: account} ->
       update_balance(repo, account, value)
@@ -19,13 +18,13 @@ defmodule BankingApi.Accounts.Operations.Withdraw do
     end
   end
 
-  defp get_account(repo, id) do
+  defp get_account(repo, user) do
     Accounts
-    |> where([a], a.id == ^id)
+    |> where([a], a.user == ^user)
     |> lock("FOR UPDATE")
     |> repo.one()
     |> case do
-      nil -> {:error, "Account not found"}
+      nil -> {:error, :account_not_found}
       account -> {:ok, account}
     end
   end
