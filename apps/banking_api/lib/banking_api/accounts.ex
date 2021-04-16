@@ -5,19 +5,20 @@ defmodule BankingApi.Accounts do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @required_params [:user]
+  @optional_params [:balance]
 
   schema "accounts" do
-
     field :user, :string
     field :balance, :integer, default: 1000
 
     timestamps()
   end
 
-  def changeset(params) do
-    %__MODULE__{}
-    |> cast(params, @required_params)
+    def changeset(model \\ %__MODULE__{}, params) do
+    model
+    |> cast(params, @required_params ++ @optional_params)
     |> validate_required(@required_params)
     |> validate_number(:balance, greater_than_or_equal_to: 0)
+    |> unique_constraint(:user)
   end
 end
