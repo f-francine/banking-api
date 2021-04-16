@@ -5,16 +5,19 @@ defmodule BankingApiWeb.Controllers.AccountsController do
 
   alias BankingApi.Accounts
   def create(conn, params) do
-    params
-    |> BankingApi.create_account()
-    |> IO.inspect(label: "Create account")
-    |> handle_response(conn)
+    with {:ok, %Accounts{} = account} <- BankingApi.create_account(params) do
+      conn
+      |> put_view(AccountsView)
+      |> IO.inspect(label: "Create account")
+      |> put_status(:created)
+      |> render("create.json", account: account)
+    end
   end
 
-  defp handle_response({:ok, %Accounts{} = account}, conn) do
-    conn
-    |> put_view(AccountsView)
-    |> put_status(:created)
-    |> render("create.json", account: account)
-  end
+  # defp handle_response({:ok, %Accounts{} = account}, conn) do
+  #   conn
+  #   |> put_view(AccountsView)
+  #   |> put_status(:created)
+  #   |> render("create.json", account: account)
+  # end
 end
