@@ -10,6 +10,10 @@ defmodule BankingApiWeb.Views.ErrorView do
     %{message: translate_errors(changeset)}
   end
 
+  def render("404.json", %{result: :account_not_found}) do
+    %{reason: "Account not found"}
+  end
+
   defp translate_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
       Enum.reduce(opts, msg, fn {key, value}, acc ->
