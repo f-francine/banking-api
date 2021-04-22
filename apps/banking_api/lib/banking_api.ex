@@ -1,5 +1,4 @@
 defmodule BankingApi do
-
   alias BankingAPi.Accounts.CreateAccount
   alias BankingApi.Accounts.Operations.{Transaction, Withdraw}
 

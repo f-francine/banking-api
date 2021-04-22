@@ -7,7 +7,6 @@ defmodule BankingApi.Application do
 
   def start(_type, _args) do
     children = [
-
       # Start the Ecto repository
       BankingApi.Repo,
 

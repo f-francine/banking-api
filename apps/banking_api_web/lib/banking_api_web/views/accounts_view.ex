@@ -1,5 +1,6 @@
 defmodule BankingApiWeb.Views.AccountsView do
   alias BankingApi.Accounts
+  alias BankingApi.Accounts.Schemas.Accounts
 
   @spec render(<<_::88, _::_*24>>, map) :: %{
           :message => <<_::64, _::_*8>>,

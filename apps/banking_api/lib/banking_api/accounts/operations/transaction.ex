@@ -1,6 +1,9 @@
 defmodule BankingApi.Accounts.Operations.Transaction do
+  @moduledoc """
+  Do a transaction, when valid params are passed
+  """
   alias Ecto.Multi
-  alias BankingApi.Accounts
+  alias BankingApi.Accounts.Schemas.Accounts
   import Ecto.Query
 
   def call(%{"from" => from_user, "to" => to_user, "value" => value}) do

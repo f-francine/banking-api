@@ -1,7 +1,8 @@
 defmodule BankingApiWeb.Controllers.AccountsControllerTest do
   use BankingApiWeb.ConnCase, async: true
 
-  alias BankingApi.{Accounts, Repo}
+  alias BankingApi.Repo
+  alias BankingApi.Accounts.Schemas.Accounts
 
   describe "POST /api/accounts" do
     test "sucessfully create an account when params are valid", ctx do

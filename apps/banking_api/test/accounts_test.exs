@@ -1,7 +1,8 @@
 defmodule BankingApi.AccountsTest do
   use BankingApi.DataCase, async: true
 
-  alias BankingApi.{Accounts, Repo}
+  alias BankingApi.Repo
+  alias BankingApi.Accounts.Schemas.Accounts
 
   describe "create_account/1" do
     test "sucessfully create an account when the params are valid" do

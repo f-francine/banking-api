@@ -3,7 +3,7 @@ defmodule BankingApiWeb.Controllers.AccountsController do
 
   alias BankingApiWeb.Views.{AccountsView, ErrorView}
   alias Ecto.Changeset
-  alias BankingApi.Accounts
+  alias BankingApi.Accounts.Schemas.Accounts
 
   def create(conn, params) do
     case BankingApi.create_account(params) do

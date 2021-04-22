@@ -1,5 +1,4 @@
 defmodule BankingApiWeb do
-
   def controller do
     quote do
       use Phoenix.Controller, namespace: BankingApiWeb

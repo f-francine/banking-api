@@ -1,9 +1,14 @@
 defmodule BankingApi.Accounts.Operations.Withdraw do
+  @moduledoc """
+  Do a withdraw, when a valid user and a valid value are given
+  """
+
   alias Ecto.Multi
-  alias BankingApi.Accounts
+  alias BankingApi.Accounts.Schemas.Accounts
 
   import Ecto.Query
-  def call(%{user: user, value: value}) do
+
+  def call(%{"user" => user, "value" => value}) do
     Multi.new()
     |> Multi.run(:account, fn repo, _changes ->
       get_account(repo, user)
@@ -31,9 +36,8 @@ defmodule BankingApi.Accounts.Operations.Withdraw do
 
   defp update_balance(repo, account, value) do
     balance = account.balance - value
+
     Accounts.changeset(account, %{balance: balance})
     |> repo.update()
-
   end
-
 end
