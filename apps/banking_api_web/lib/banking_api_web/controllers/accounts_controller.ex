@@ -7,18 +7,18 @@ defmodule BankingApiWeb.Controllers.AccountsController do
 
   def create(conn, params) do
     case BankingApi.create_account(params) do
-    {:ok, %Accounts{} = account} ->
-      conn
-      |> put_view(AccountsView)
-      |> put_status(:created)
-      |> render("create.json", account: account)
+      {:ok, %Accounts{} = account} ->
+        conn
+        |> put_view(AccountsView)
+        |> put_status(:created)
+        |> render("create.json", account: account)
 
-    {:error,  %Changeset{} = changeset} ->
-      conn
-      |> put_view(ErrorView)
-      |> IO.inspect(label: "Create account")
-      |> put_status(:bad_request)
-      |> render("400.json", result: changeset)
+      {:error, %Changeset{} = changeset} ->
+        conn
+        |> put_view(ErrorView)
+        |> IO.inspect(label: "Create account")
+        |> put_status(:bad_request)
+        |> render("400.json", result: changeset)
     end
   end
 
@@ -35,6 +35,12 @@ defmodule BankingApiWeb.Controllers.AccountsController do
         |> put_view(ErrorView)
         |> put_status(:bad_request)
         |> render("400.json", result: changeset)
+
+      {:error, :account_not_found} ->
+        conn
+        |> put_view(ErrorView)
+        |> put_status(404)
+        |> render("404.json", result: :account_not_found)
     end
   end
 
@@ -46,10 +52,16 @@ defmodule BankingApiWeb.Controllers.AccountsController do
         |> put_status(:ok)
         |> render("transaction_update.json", withdraw: account1, deposit: account2)
 
+      {:error, :account_not_found} ->
+        conn
+        |> put_view(ErrorView)
+        |> put_status(404)
+        |> render("404.json", result: :account_not_found)
+
       {:error, %Changeset{} = changeset} ->
         conn
         |> put_view(ErrorView)
-        |> put_status(:bad_request)
+        |> put_status(400)
         |> render("400.json", result: changeset)
     end
   end
