@@ -3,7 +3,7 @@ defmodule BankingApi.Accounts.Operations.Transaction do
   Do a transaction, when valid params are passed
   """
   alias Ecto.Multi
-  alias BankingApi.Accounts.Schemas.Accounts
+  alias BankingApi.Accounts.Schemas.{Account, LogOperations}
   import Ecto.Query
 
   def call(%{"from" => from_user, "to" => to_user, "value" => value}) do
@@ -19,6 +19,13 @@ defmodule BankingApi.Accounts.Operations.Transaction do
     end)
     |> Multi.run(:update_balance_deposit, fn repo, %{target_account: account} ->
       update_balance_deposit(repo, account, value)
+    end)
+    |> Multi.run(:save_transaction, fn repo,
+                                       %{
+                                         source_account: from,
+                                         target_account: to
+                                       } ->
+      save_transaction(repo, from.id, to.id, value)
     end)
     |> BankingApi.Repo.transaction()
     |> case do
@@ -37,7 +44,7 @@ defmodule BankingApi.Accounts.Operations.Transaction do
   end
 
   defp get_account(repo, user) do
-    Accounts
+    Account
     |> where([a], a.user == ^user)
     |> lock("FOR UPDATE")
     |> repo.one()
@@ -50,14 +57,19 @@ defmodule BankingApi.Accounts.Operations.Transaction do
   defp update_balance_deposit(repo, account, value) do
     balance = account.balance + value
 
-    Accounts.changeset(account, %{balance: balance})
+    Account.changeset(account, %{balance: balance})
     |> repo.update()
   end
 
   defp update_balance_withdraw(repo, account, value) do
     balance = account.balance - value
 
-    Accounts.changeset(account, %{balance: balance})
+    Account.changeset(account, %{balance: balance})
     |> repo.update()
+  end
+
+  defp save_transaction(repo, from, to, value) do
+    LogOperations.changeset(%{"from_account_id" => from, "to_account_id" => to, "value" => value})
+    |> repo.insert()
   end
 end

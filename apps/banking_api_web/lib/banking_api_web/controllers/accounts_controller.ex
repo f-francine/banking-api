@@ -3,11 +3,11 @@ defmodule BankingApiWeb.Controllers.AccountsController do
 
   alias BankingApiWeb.Views.{AccountsView, ErrorView}
   alias Ecto.Changeset
-  alias BankingApi.Accounts.Schemas.Accounts
+  alias BankingApi.Accounts.Schemas.Account
 
   def create(conn, params) do
     case BankingApi.create_account(params) do
-      {:ok, %Accounts{} = account} ->
+      {:ok, %Account{} = account} ->
         conn
         |> put_view(AccountsView)
         |> put_status(:created)
@@ -24,7 +24,7 @@ defmodule BankingApiWeb.Controllers.AccountsController do
 
   def withdraw(conn, params) do
     case BankingApi.withdraw(params) do
-      {:ok, %Accounts{} = account} ->
+      {:ok, %Account{} = account} ->
         conn
         |> put_view(AccountsView)
         |> put_status(:ok)
@@ -46,7 +46,7 @@ defmodule BankingApiWeb.Controllers.AccountsController do
 
   def transaction(conn, params) do
     case BankingApi.transaction(params) do
-      {:ok, %Accounts{} = account1, %Accounts{} = account2} ->
+      {:ok, %Account{} = account1, %Account{} = account2} ->
         conn
         |> put_view(AccountsView)
         |> put_status(:ok)

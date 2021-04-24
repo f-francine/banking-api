@@ -2,7 +2,7 @@ defmodule BankingApiWeb.Controllers.AccountsControllerTest do
   use BankingApiWeb.ConnCase, async: true
 
   alias BankingApi.Repo
-  alias BankingApi.Accounts.Schemas.Accounts
+  alias BankingApi.Accounts.Schemas.Account
 
   describe "POST /api/accounts" do
     test "sucessfully create an account when params are valid", ctx do
@@ -18,7 +18,7 @@ defmodule BankingApiWeb.Controllers.AccountsControllerTest do
     end
 
     test "fail with 400 when user is already taken", ctx do
-      Repo.insert!(%Accounts{user: "Han"})
+      Repo.insert!(%Account{user: "Han"})
       user = %{user: "Han"}
 
       assert %{
@@ -41,8 +41,8 @@ defmodule BankingApiWeb.Controllers.AccountsControllerTest do
     end
 
     test "fail with 400 when withdraw value is bigger than current balnce", ctx do
-      Repo.insert!(%Accounts{user: "Han"})
-      Repo.insert!(%Accounts{user: "Maxon"})
+      Repo.insert!(%Account{user: "Han"})
+      Repo.insert!(%Account{user: "Maxon"})
 
       input = %{from: "Han", to: "Maxon", value: 100_000}
 
@@ -53,8 +53,8 @@ defmodule BankingApiWeb.Controllers.AccountsControllerTest do
     end
 
     test "sucessfully done transaction when all params are valid", ctx do
-      Repo.insert!(%Accounts{user: "Han"})
-      Repo.insert!(%Accounts{user: "Maxon"})
+      Repo.insert!(%Account{user: "Han"})
+      Repo.insert!(%Account{user: "Maxon"})
 
       input = %{from: "Han", to: "Maxon", value: 10}
 
@@ -76,7 +76,7 @@ defmodule BankingApiWeb.Controllers.AccountsControllerTest do
     end
 
     test "fail if widraw value is bigger than current balance", ctx do
-      Repo.insert!(%Accounts{user: "Han"})
+      Repo.insert!(%Account{user: "Han"})
 
       input = %{user: "Han", value: 10000}
 
@@ -87,7 +87,7 @@ defmodule BankingApiWeb.Controllers.AccountsControllerTest do
     end
 
     test "sucessfully done withdraw when all params are valid", ctx do
-      Repo.insert!(%Accounts{user: "Han"})
+      Repo.insert!(%Account{user: "Han"})
 
       input = %{user: "Han", value: 10}
 

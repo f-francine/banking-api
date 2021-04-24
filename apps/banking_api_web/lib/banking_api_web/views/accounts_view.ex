@@ -1,6 +1,5 @@
 defmodule BankingApiWeb.Views.AccountsView do
-  alias BankingApi.Accounts
-  alias BankingApi.Accounts.Schemas.Accounts
+  alias BankingApi.Accounts.Schemas.Account
 
   @spec render(<<_::88, _::_*24>>, map) :: %{
           :message => <<_::64, _::_*8>>,
@@ -8,7 +7,7 @@ defmodule BankingApiWeb.Views.AccountsView do
           optional(:deposit) => %{balance: any, id: any, user: any},
           optional(:withdraw) => %{balance: any, id: any, user: any}
         }
-  def render("create.json", %{account: %Accounts{id: _id, user: user, balance: balance}}) do
+  def render("create.json", %{account: %Account{id: _id, user: user, balance: balance}}) do
     %{
       message: "Account created",
       account: %{
@@ -18,7 +17,7 @@ defmodule BankingApiWeb.Views.AccountsView do
     }
   end
 
-  def render("withdraw_update.json", %{account: %Accounts{id: _id, user: user, balance: balance}}) do
+  def render("withdraw_update.json", %{account: %Account{id: _id, user: user, balance: balance}}) do
     %{
       message: "Balance changed succesfully",
       account: %{
@@ -29,8 +28,8 @@ defmodule BankingApiWeb.Views.AccountsView do
   end
 
   def render("transaction_update.json", %{
-        withdraw: %Accounts{id: _withdraw_id, user: withdraw_user, balance: withdraw_balance},
-        deposit: %Accounts{id: _deposit_id, user: deposit_user, balance: deposit_balance}
+        withdraw: %Account{id: _withdraw_id, user: withdraw_user, balance: withdraw_balance},
+        deposit: %Account{id: _deposit_id, user: deposit_user, balance: deposit_balance}
       }) do
     %{
       message: "Transaction done succesfully",

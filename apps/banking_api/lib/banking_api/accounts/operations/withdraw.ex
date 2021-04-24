@@ -4,7 +4,7 @@ defmodule BankingApi.Accounts.Operations.Withdraw do
   """
 
   alias Ecto.Multi
-  alias BankingApi.Accounts.Schemas.Accounts
+  alias BankingApi.Accounts.Schemas.Account
 
   import Ecto.Query
 
@@ -24,7 +24,7 @@ defmodule BankingApi.Accounts.Operations.Withdraw do
   end
 
   defp get_account(repo, user) do
-    Accounts
+    Account
     |> where([a], a.user == ^user)
     |> lock("FOR UPDATE")
     |> repo.one()
@@ -37,7 +37,7 @@ defmodule BankingApi.Accounts.Operations.Withdraw do
   defp update_balance(repo, account, value) do
     balance = account.balance - value
 
-    Accounts.changeset(account, %{balance: balance})
+    Account.changeset(account, %{balance: balance})
     |> repo.update()
   end
 end

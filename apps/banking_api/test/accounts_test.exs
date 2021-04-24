@@ -2,7 +2,7 @@ defmodule BankingApi.AccountsTest do
   use BankingApi.DataCase, async: true
 
   alias BankingApi.Repo
-  alias BankingApi.Accounts.Schemas.Accounts
+  alias BankingApi.Accounts.Schemas.Account
 
   describe "create_account/1" do
     test "sucessfully create an account when the params are valid" do
@@ -11,7 +11,7 @@ defmodule BankingApi.AccountsTest do
 
     test "fail if user already exists" do
       user = "Leia"
-      Repo.insert!(%Accounts{user: user})
+      Repo.insert!(%Account{user: user})
       assert {:error, _changeset} = BankingApi.create_account(%{user: user})
     end
   end
@@ -27,7 +27,7 @@ defmodule BankingApi.AccountsTest do
 
     test "fail if withdraw's value is bigger than current balance" do
       user = "Lynn"
-      Repo.insert!(%Accounts{user: user})
+      Repo.insert!(%Account{user: user})
 
       assert {:error, _reason} =
                BankingApi.withdraw(%{
@@ -38,7 +38,7 @@ defmodule BankingApi.AccountsTest do
 
     test "withdraw sucessfully done when all params are valid" do
       user = "Lynn"
-      Repo.insert!(%Accounts{user: user})
+      Repo.insert!(%Account{user: user})
 
       assert {:ok, _account} =
                BankingApi.withdraw(%{
@@ -53,7 +53,7 @@ defmodule BankingApi.AccountsTest do
       user1 = "Lynn"
 
       user2 = "Leia"
-      Repo.insert!(%Accounts{user: user2})
+      Repo.insert!(%Account{user: user2})
 
       assert {:error, :account_not_found} =
                BankingApi.transaction(%{
@@ -65,7 +65,7 @@ defmodule BankingApi.AccountsTest do
 
     test "fail if target account does not exist" do
       user1 = "Leia"
-      Repo.insert!(%Accounts{user: user1})
+      Repo.insert!(%Account{user: user1})
 
       user2 = "Lynn"
 
@@ -79,10 +79,10 @@ defmodule BankingApi.AccountsTest do
 
     test "fail if withdraw value from source account is bigger than the current balance" do
       user1 = "Lynn"
-      Repo.insert!(%Accounts{user: user1})
+      Repo.insert!(%Account{user: user1})
 
       user2 = "Leia"
-      Repo.insert!(%Accounts{user: user2})
+      Repo.insert!(%Account{user: user2})
 
       assert {:error, _changeset} =
                BankingApi.transaction(%{
@@ -94,10 +94,10 @@ defmodule BankingApi.AccountsTest do
 
     test "transaction sucessfully done when all params are valid" do
       user1 = "Lynn"
-      Repo.insert!(%Accounts{user: user1})
+      Repo.insert!(%Account{user: user1})
 
       user2 = "Leia"
-      Repo.insert!(%Accounts{user: user2})
+      Repo.insert!(%Account{user: user2})
 
       assert {:ok, _account1, _account2} =
                BankingApi.transaction(%{
