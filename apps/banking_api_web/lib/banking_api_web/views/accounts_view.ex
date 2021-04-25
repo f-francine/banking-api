@@ -17,6 +17,12 @@ defmodule BankingApiWeb.Views.AccountsView do
     }
   end
 
+  def render("account_info.json", balance) do
+    %{
+      message: "Your current balance is #{balance}"
+    }
+  end
+
   def render("withdraw_update.json", %{account: %Account{id: _id, user: user, balance: balance}}) do
     %{
       message: "Balance changed succesfully",

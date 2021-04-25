@@ -3,11 +3,11 @@ defmodule BankingApiWeb.Controllers.AccountsController do
 
   alias BankingApiWeb.Views.{AccountsView, ErrorView}
   alias Ecto.Changeset
-  alias BankingApi.Accounts.Schemas.Account
+  alias BankingApi.Accounts.Schemas
 
   def create(conn, params) do
     case BankingApi.create_account(params) do
-      {:ok, %Account{} = account} ->
+      {:ok, %Schemas.Account{} = account} ->
         conn
         |> put_view(AccountsView)
         |> put_status(:created)
@@ -16,15 +16,28 @@ defmodule BankingApiWeb.Controllers.AccountsController do
       {:error, %Changeset{} = changeset} ->
         conn
         |> put_view(ErrorView)
-        |> IO.inspect(label: "Create account")
         |> put_status(:bad_request)
         |> render("400.json", result: changeset)
     end
   end
 
+  def show(conn, %{"id" => account_id}) do
+    with {:uuid, {:ok, _}} <- {:uuid, Ecto.UUID.cast(account_id)},
+         {:ok, balance} <- BankingApi.Account.fetch(account_id) do
+      send_json(conn, 200, %{description: "Your current balance is #{balance}"})
+    else
+      {:uuid, :error} ->
+        send_json(conn, 400, %{type: "bad_input", description: "Not a proper UUID v4"})
+
+      {:error, :not_found} ->
+        send_json(conn, 404, %{type: "not_found", description: "Author not found"})
+    end
+  end
+
+  @spec withdraw(Plug.Conn.t(), map) :: Plug.Conn.t()
   def withdraw(conn, params) do
     case BankingApi.withdraw(params) do
-      {:ok, %Account{} = account} ->
+      {:ok, %Schemas.Account{} = account} ->
         conn
         |> put_view(AccountsView)
         |> put_status(:ok)
@@ -45,8 +58,8 @@ defmodule BankingApiWeb.Controllers.AccountsController do
   end
 
   def transaction(conn, params) do
-    case BankingApi.transaction(params) do
-      {:ok, %Account{} = account1, %Account{} = account2} ->
+    case BankingApi.Account.transaction(params) do
+      {:ok, %Schemas.Account{} = account1, %Schemas.Account{} = account2} ->
         conn
         |> put_view(AccountsView)
         |> put_status(:ok)
@@ -64,5 +77,11 @@ defmodule BankingApiWeb.Controllers.AccountsController do
         |> put_status(400)
         |> render("400.json", result: changeset)
     end
+  end
+
+  defp send_json(conn, status, body) do
+    conn
+    |> put_resp_header("content-type", "application/json")
+    |> send_resp(status, Jason.encode!(body))
   end
 end
