@@ -69,7 +69,12 @@ defmodule BankingApi.Accounts.Operations.Transaction do
   end
 
   defp save_transaction(repo, from, to, value) do
-    LogOperations.changeset(%{"from_account_id" => from, "to_account_id" => to, "value" => value})
+    LogOperations.changeset(%{
+      "from_account_id" => from,
+      "to_account_id" => to,
+      "value" => value,
+      "operation_type" => "transaction"
+    })
     |> repo.insert()
   end
 end

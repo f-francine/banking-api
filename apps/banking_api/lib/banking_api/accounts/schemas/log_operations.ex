@@ -9,11 +9,12 @@ defmodule BankingApi.Accounts.Schemas.LogOperations do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
-  @required_params [:from_account_id, :to_account_id, :value]
-  @optional_params []
+  @required_params [:from_account_id, :value, :operation_type]
+  @optional_params [:to_account_id]
 
   schema "log_operations" do
     field :value, :integer
+    field :operation_type, :string
     belongs_to :from_account, Account
     belongs_to :to_account, Account
 

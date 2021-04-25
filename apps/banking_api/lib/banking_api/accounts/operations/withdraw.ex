@@ -4,7 +4,7 @@ defmodule BankingApi.Accounts.Operations.Withdraw do
   """
 
   alias Ecto.Multi
-  alias BankingApi.Accounts.Schemas.Account
+  alias BankingApi.Accounts.Schemas.{Account, LogOperations}
 
   import Ecto.Query
 
@@ -15,6 +15,13 @@ defmodule BankingApi.Accounts.Operations.Withdraw do
     end)
     |> Multi.run(:update_balance, fn repo, %{account: account} ->
       update_balance(repo, account, value)
+    end)
+    |> Multi.run(:save_transaction, fn repo,
+                                       %{
+                                         source_account: from,
+                                         target_account: from
+                                       } ->
+      save_transaction(repo, from.id, from.id, value)
     end)
     |> BankingApi.Repo.transaction()
     |> case do
@@ -39,5 +46,15 @@ defmodule BankingApi.Accounts.Operations.Withdraw do
 
     Account.changeset(account, %{balance: balance})
     |> repo.update()
+  end
+
+  defp save_transaction(repo, from, _from, value) do
+    LogOperations.changeset(%{
+      "from_account_id" => from,
+      "to_account_id" => from,
+      "value" => value,
+      "operation_type" => "withdraw"
+    })
+    |> repo.insert()
   end
 end
