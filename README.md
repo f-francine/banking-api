@@ -6,7 +6,8 @@ Payment API, where it is possible to make withdrawals and transfers between user
 
 > Make sure you have elixir and docker in your machine. If you don't have them, you can install here: <br>
 elixir:  https://elixir-lang.org/install.html <br>
-docker: https://docs.docker.com/get-docker/
+docker: https://docs.docker.com/get-docker/ <br>
+
 In the project's root folder, run this command to have a postgres database running on port 5432:
 ```
 # Running a database on port 5432
@@ -97,5 +98,15 @@ If both users exist and the value is valid (value <= balance), you will receive 
         "balance": 980,
         "user": "Some name"
     }
+}
+```
+### Fetch an account
+Route: `/api/accounts/:id` <br>
+Method: `GET` <br>
+If the given id belongs to an account, you will receive an awnser like this:
+```json
+{
+	"description":
+		"Your current balance is 940"
 }
 ```
