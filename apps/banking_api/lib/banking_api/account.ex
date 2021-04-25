@@ -1,4 +1,7 @@
 defmodule BankingApi.Account do
+  @moduledoc """
+  Domain public functions about the authors context.
+  """
   alias BankingApi.Repo
   alias BankingApi.Accounts.Schemas.{Account, LogOperations}
   alias Ecto.Multi
@@ -10,6 +13,10 @@ defmodule BankingApi.Account do
     |> Repo.insert()
   end
 
+  @spec withdraw(map) :: {:error, any} | {:ok, any}
+  @doc """
+  Withdraws to a valid user's account, when there is a balance limit available
+  """
   def withdraw(%{"user" => user, "value" => value}) do
     Multi.new()
     |> Multi.run(:account, fn repo, _changes ->
@@ -28,6 +35,9 @@ defmodule BankingApi.Account do
     end
   end
 
+  @doc """
+  Transaction between two valid accounts, when the balance limit is available
+  """
   def transaction(%{"from" => from_user, "to" => to_user, "value" => value}) do
     Multi.new()
     |> Multi.run(:source_account, fn repo, _changes ->
@@ -109,6 +119,7 @@ defmodule BankingApi.Account do
     |> repo.insert()
   end
 
+  @spec fetch(Ecto.UUID.t()) :: {:ok, Account.t()} | {:error, :not_found}
   def fetch(account_id) do
     from(a in BankingApi.Accounts.Schemas.Account, where: a.id == ^account_id, select: a.balance)
     |> Repo.one()
