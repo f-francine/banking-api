@@ -12,7 +12,7 @@ defmodule BankingApi.AccountsTest do
     test "fail if user already exists" do
       user = "Leia"
       Repo.insert!(%Account{user: user})
-      assert {:error, _changeset} = BankingApi.create_account(%{user: user})
+      assert {:error, _changeset} = BankingApi.Account.create(%{user: user})
     end
   end
 
@@ -41,9 +41,9 @@ defmodule BankingApi.AccountsTest do
       Repo.insert!(%Account{user: user})
 
       assert {:ok, _account} =
-               BankingApi.withdraw(%{
+               BankingApi.Account.withdraw(%{
                  "user" => "Lynn",
-                 "value" => 100
+                 "value" => 10
                })
     end
   end
@@ -100,7 +100,7 @@ defmodule BankingApi.AccountsTest do
       Repo.insert!(%Account{user: user2})
 
       assert {:ok, _account1, _account2} =
-               BankingApi.transaction(%{
+               BankingApi.Account.transaction(%{
                  "from" => user1,
                  "to" => user2,
                  "value" => 10

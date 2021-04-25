@@ -10,6 +10,18 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-BankingApi.Repo.insert!(%BankingApi.Accounts.Inputs.CrateAccount{
+BankingApi.Repo.insert!(%BankingApi.Account.create({
   user: "Lynn"
+})
+
+BankingApi.Repo.insert!(%BankingApi.Account.create({
+  user: "Jenny B"
+})
+
+BankingApi.Repo.insert!(%BankingApi.Account.create({
+  user: "Jenny C"
+})
+
+BankingApi.Repo.insert!(%BankingApi.Account.create({
+  user: "Markov"
 })
