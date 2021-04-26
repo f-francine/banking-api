@@ -6,7 +6,7 @@ defmodule BankingApi.AccountsTest do
 
   describe "create_account/1" do
     test "sucessfully create an account when the params are valid" do
-      assert {:ok, _account} = BankingApi.create_account(%{user: "Leia"})
+      assert {:ok, _account} = BankingApi.Account.create(%{user: "Leia"})
     end
 
     test "fail if user already exists" do
@@ -19,7 +19,7 @@ defmodule BankingApi.AccountsTest do
   describe "withdraw/1" do
     test "fail if user does not exist" do
       assert {:error, _reason} =
-               BankingApi.withdraw(%{
+               BankingApi.Account.withdraw(%{
                  "user" => "unkown",
                  "value" => 10
                })
@@ -30,7 +30,7 @@ defmodule BankingApi.AccountsTest do
       Repo.insert!(%Account{user: user})
 
       assert {:error, _reason} =
-               BankingApi.withdraw(%{
+               BankingApi.Account.withdraw(%{
                  "user" => "Lynn",
                  "value" => 100_000
                })
@@ -56,7 +56,7 @@ defmodule BankingApi.AccountsTest do
       Repo.insert!(%Account{user: user2})
 
       assert {:error, :account_not_found} =
-               BankingApi.transaction(%{
+               BankingApi.Account.transaction(%{
                  "from" => user1,
                  "to" => user2,
                  "value" => 10
@@ -70,7 +70,7 @@ defmodule BankingApi.AccountsTest do
       user2 = "Lynn"
 
       assert {:error, :account_not_found} =
-               BankingApi.transaction(%{
+               BankingApi.Account.transaction(%{
                  "from" => user1,
                  "to" => user2,
                  "value" => 10
@@ -85,7 +85,7 @@ defmodule BankingApi.AccountsTest do
       Repo.insert!(%Account{user: user2})
 
       assert {:error, _changeset} =
-               BankingApi.transaction(%{
+               BankingApi.Account.transaction(%{
                  "from" => user1,
                  "to" => user2,
                  "value" => 1_000_000
