@@ -1,11 +1,20 @@
 defmodule BankingApiWeb.Controllers.AccountsController do
+  @moduledoc """
+  Account actions.
+  """
+
   use BankingApiWeb, :controller
 
   alias BankingApiWeb.Views.{AccountsView, ErrorView}
-  alias Ecto.Changeset
+
   alias BankingApi.Accounts.Schemas
   alias BankingApi.Account
 
+  alias Ecto.Changeset
+
+  @doc """
+  Create an account.
+  """
   def create(conn, params) do
     case Account.create(params) do
       {:ok, %Schemas.Account{} = account} ->
@@ -24,7 +33,7 @@ defmodule BankingApiWeb.Controllers.AccountsController do
 
   def show(conn, %{"id" => account_id}) do
     with {:uuid, {:ok, _}} <- {:uuid, Ecto.UUID.cast(account_id)},
-         {:ok, balance} <- BankingApi.Account.fetch(account_id) do
+         {:ok, balance} <- Account.fetch(account_id) do
       send_json(conn, 200, %{description: "Your current balance is #{balance}"})
     else
       {:uuid, :error} ->
@@ -35,7 +44,7 @@ defmodule BankingApiWeb.Controllers.AccountsController do
     end
   end
 
-  @spec withdraw(Plug.Conn.t(), map) :: Plug.Conn.t()
+  @spec withdraw(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def withdraw(conn, params) do
     case Account.withdraw(params) do
       {:ok, %Schemas.Account{} = account} ->
@@ -59,8 +68,8 @@ defmodule BankingApiWeb.Controllers.AccountsController do
   end
 
   def transaction(conn, params) do
-    case BankingApi.Account.transaction(params) do
-      {:ok, %Schemas.Account{} = account1, %Schemas.Account{} = account2} ->
+    case Account.transaction(params) do
+      {:ok, {%Schemas.Account{} = account1, %Schemas.Account{} = account2}} ->
         conn
         |> put_view(AccountsView)
         |> put_status(:ok)
