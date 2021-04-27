@@ -1,6 +1,6 @@
 ## Banking API
 
-Payment API, where it is possible to make withdrawals and transfers between users
+Banking API, where it is possible to make withdrawals and transfers between users
 
 ### How to run
 
@@ -8,13 +8,13 @@ Payment API, where it is possible to make withdrawals and transfers between user
 elixir:  https://elixir-lang.org/install.html <br>
 docker: https://docs.docker.com/get-docker/ <br>
 
-In the project's root folder, run this command to have a postgres database running on port 5432:
+In the project's root folder, run this command to have a Postgres database running on port 5432:
 ```
 # Running a database on port 5432
 docker-compose up -d
 ``` 
 
-Configure the database and download the depencies (in the root folder):
+Configure the database and download the dependencies (in the root folder):
 ```
 mix setup
 ```
@@ -26,7 +26,7 @@ mix test
 
 Start the server:
 ```
-mix phx.server
+iex -S mix phx.server
 ```
 ## Endpoints
 ### Create an account
@@ -35,7 +35,7 @@ Route: `/api/accounts`<br>
 Method: `POST`
 ```json
 {
-	"user": "Some name" 
+	"user": "Some name"
 }
 ```
 

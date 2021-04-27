@@ -1,12 +1,8 @@
 defmodule BankingApiWeb.Views.AccountsView do
+  use BankingApiWeb, :view
+
   alias BankingApi.Accounts.Schemas.Account
 
-  @spec render(<<_::88, _::_*24>>, map) :: %{
-          :message => <<_::64, _::_*8>>,
-          optional(:account) => %{balance: any, id: any, user: any},
-          optional(:deposit) => %{balance: any, id: any, user: any},
-          optional(:withdraw) => %{balance: any, id: any, user: any}
-        }
   def render("create.json", %{account: %Account{id: _id, user: user, balance: balance}}) do
     %{
       message: "Account created",

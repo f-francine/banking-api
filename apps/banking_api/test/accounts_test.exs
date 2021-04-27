@@ -99,12 +99,11 @@ defmodule BankingApi.AccountsTest do
       user2 = "Leia"
       Repo.insert!(%Account{user: user2})
 
-      assert {:ok, _account1, _account2} =
-               BankingApi.Account.transaction(%{
-                 "from" => user1,
-                 "to" => user2,
-                 "value" => 10
-               })
+      assert {:ok, {withdrawn, deposited}} =
+               BankingApi.Account.transaction(%{"from" => user1, "to" => user2, "value" => 10})
+
+      assert withdrawn.user == "Lynn"
+      assert deposited.user == "Leia"
     end
   end
 end
